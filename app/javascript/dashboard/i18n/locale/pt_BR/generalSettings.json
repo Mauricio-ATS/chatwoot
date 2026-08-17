@@ -121,6 +121,14 @@
       "FEATURES": {
         "INBOUND_EMAIL_ENABLED": "A continuidade das conversas com e-mails está ativada para sua conta.",
         "CUSTOM_EMAIL_DOMAIN_ENABLED": "Você pode receber e-mails em seu domínio personalizado agora."
+      },
+      "CONVERSATION_VISIBILITY": {
+        "TITLE": "Restringir visualização de conversas",
+        "NOTE": "Agentes podem visualizar apenas conversas atribuídas a eles ou não atribuídas.",
+        "API": {
+          "SUCCESS": "Configurações de Restrição atualizadas com sucesso",
+          "ERROR": "Falha ao atualizar as configurações de Restrição"
+        }
       }
     },
     "UPDATE_CHATWOOT": "Uma atualização {latestChatwootVersion} para o Chatwoot está disponível. Por favor, atualize sua instância.",
