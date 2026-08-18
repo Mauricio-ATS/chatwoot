@@ -1,5 +1,6 @@
 json.settings resource.settings
 json.created_at resource.created_at
+json.agents_can_only_see_assigned_conversations resource.agents_can_only_see_assigned_conversations
 if resource.custom_attributes.present?
   json.custom_attributes do
     json.plan_name resource.custom_attributes['plan_name']

@@ -15,7 +15,7 @@ watch(
   currentAccount,
   account => {
     isEnabled.value =
-      account?.settings?.agents_can_only_see_assigned_conversations ?? false;
+      account?.agents_can_only_see_assigned_conversations ?? false;
   },
   { immediate: true }
 );
@@ -23,14 +23,14 @@ watch(
 const toggleConversationVisibility = async () => {
   try {
     isSubmitting.value = true;
-    console.log('isEnabled:', isEnabled.value);
+    
     await updateAccount(
       {
         agents_can_only_see_assigned_conversations: isEnabled.value,
       },
       { silent: true }
     );
-
+    
     useAlert(t('GENERAL_SETTINGS.FORM.CONVERSATION_VISIBILITY.API.SUCCESS'));
   } catch (error) {
     isEnabled.value = !isEnabled.value;
