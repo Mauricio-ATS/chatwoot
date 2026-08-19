@@ -42,6 +42,11 @@ services:
       - RAILS_ENV=development
     entrypoint: docker/entrypoints/rails.sh
     command: ["bundle", "exec", "rails", "s", "-p", "3000", "-b", "0.0.0.0"]
+    networks:
+      default:
+      evolution-net:
+        aliases:
+          - chatwoot.local
 
   sidekiq:
     <<: *base
@@ -88,7 +93,7 @@ services:
     ports:
       - '5433:5432'
     volumes:
-      - postgres:/data/postgres
+      - postgres:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=chatwoot
       - POSTGRES_USER=postgres
@@ -112,8 +117,15 @@ services:
 
 volumes:
   postgres:
+    external: true
+    name: d72a22c43b7f25916cfc167537d6189b2d034755d56e44f973ea3fa1b55ef713
   redis:
   packs:
   node_modules:
   cache:
   bundle:
+
+networks:
+  evolution-net:
+    external: true
+    name: evolution-net
