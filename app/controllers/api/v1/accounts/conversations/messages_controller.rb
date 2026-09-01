@@ -54,6 +54,29 @@ class Api::V1::Accounts::Conversations::MessagesController < Api::V1::Accounts::
     render_could_not_create_error(e.details.presence || e.message)
   end
 
+  def forward
+    contact_ids = params[:contact_ids]
+
+    if contact_ids.blank?
+      render json: { error: 'Nenhum contato selecionado' }, status: :unprocessable_entity
+      return
+    end
+
+    # Usamos o helper `message` nativo da classe para obter a mensagem buscada pelo id
+    target_message = message
+
+    contact_ids.each do |contact_id|
+      Conversations::ForwardMessageJob.perform_later(
+        account_id: current_account.id,
+        original_message_id: target_message.id,
+        target_contact_id: contact_id,
+        user_id: current_user.id
+      )
+    end
+
+    render json: { success: true }, status: :ok
+  end
+
   private
 
   def message

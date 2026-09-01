@@ -16,11 +16,13 @@ import MenuItem from '../../../components/widgets/conversation/contextMenu/menuI
 import { useTrack } from 'dashboard/composables';
 import NextButton from 'dashboard/components-next/button/Button.vue';
 import ReportCaptainMessageDialog from './ReportCaptainMessageDialog.vue';
+import ForwardModal from 'dashboard/components/widgets/conversation/contextMenu/ForwardModal.vue';
 
 export default {
   components: {
     AddCannedModal,
     MenuItem,
+    ForwardModal,
     ContextMenu,
     NextButton,
     ReportCaptainMessageDialog,
@@ -59,6 +61,7 @@ export default {
     return {
       isCannedResponseModalOpen: false,
       showDeleteModal: false,
+      showForwardModal: false,
     };
   },
   computed: {
@@ -163,6 +166,13 @@ export default {
       this.handleClose();
       this.$refs.reportDialog?.open();
     },
+    handleForward() {
+      this.handleClose();
+      this.showForwardModal = true;
+    },
+    onCloseForwardModal() {
+      this.showForwardModal = false;
+    },
   },
 };
 </script>
@@ -180,6 +190,12 @@ export default {
         :on-close="hideCannedResponseModal"
       />
     </woot-modal>
+    <!-- Forward Content -->
+    <forward-modal
+      v-if="showForwardModal"
+      :message="message"
+      @close="onCloseForwardModal"
+    />
     <!-- Confirm Deletion -->
     <woot-delete-modal
       v-if="showDeleteModal && enabledOptions['delete']"
@@ -234,6 +250,14 @@ export default {
           }"
           variant="icon"
           @click.stop="handleTranslate"
+        />
+        <menu-item
+          :option="{
+            icon: 'share',
+            label: $t('CONVERSATION.CONTEXT_MENU.FORWARD'),
+          }"
+          variant="icon"
+          @click="handleForward"
         />
         <hr />
         <MenuItem

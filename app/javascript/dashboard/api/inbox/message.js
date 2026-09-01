@@ -114,6 +114,15 @@ class MessageApi extends ApiClient {
       }
     );
   }
+
+  forwardMessage(conversationId, messageId, contacts) {
+    return axios.post(
+      `${this.url}/${conversationId}/messages/${messageId}/forward`,
+      {
+        contacts,
+      }
+    );
+  }
 }
 
 export default new MessageApi();

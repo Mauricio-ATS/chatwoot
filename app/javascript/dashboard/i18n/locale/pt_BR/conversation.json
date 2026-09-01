@@ -317,6 +317,7 @@
       "DELETE": "Excluir",
       "CREATE_A_CANNED_RESPONSE": "Adicionar às respostas prontas",
       "TRANSLATE": "Traduzir",
+      "FORWARD": "Encaminhar",
       "COPY_PERMALINK": "Copiar link para a mensagem",
       "LINK_COPIED": "URL da mensagem copiada para a área de transferência",
       "DELETE_CONFIRMATION": {
@@ -527,5 +528,16 @@
   },
   "GALLERY_VIEW": {
     "ERROR_DOWNLOADING": "Não foi possível baixar o anexo. Por favor, tente novamente"
+  },
+  "FORWARD_MESSAGE": {
+    "TITLE": "Compartilhar mensagem",
+    "DESCRIPTION": "Compartilhe a mensagem com seus contatos",
+    "SEARCH_LABEL": "Procurar um contato",
+    "SEARCH_PLACEHOLDER": "Digite o nome ou telefone",
+    "EMPTY_STATE": "Nenhum contato encontrado.",
+    "CANCEL": "Cancelar",
+    "SUBMIT": "Encaminhar",
+    "SUCCESS": "Mensagem encaminhada com sucesso!",
+    "ERROR": "Não foi possível encaminhar a mensagem."
   }
 }
