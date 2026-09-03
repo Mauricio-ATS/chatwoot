@@ -1,4 +1,19 @@
 {
+  "INTERNAL_CHAT": {
+      "TITLE": "Chat Interno",
+      "SELF_CHAT_TOOLTIP": "Notas para si",
+      "LOADING": "Carregando conversas...",
+      "EMPTY": "Ainda não há conversas",
+      "SELECT_CONVERSATION": "Selecione uma conversa para começar a chamar",
+      "LOADING_MESSAGES": "Carregando mensagens...",
+      "NO_MESSAGES": "Ainda não há mensagens. Diga olá!",
+      "MESSAGE_PLACEHOLDER": "Digite uma mensagem...",
+      "NEW_CONVERSATION": "Nova conversa",
+      "SEARCH_AGENT_PLACEHOLDER": "Pesquisar agentes...",
+      "NO_AGENTS_FOUND": "Nenhum agente encontrado",
+       "SIDEBAR.INTERNAL_CHAT": "Chat interno"
+    },
+
   "PROFILE_SETTINGS": {
     "LINK": "Configurações do Perfil",
     "TITLE": "Configurações do Perfil",

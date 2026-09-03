@@ -59,6 +59,16 @@ const { t } = useI18n();
 const isACustomBrandedInstance = useMapGetter(
   'globalConfig/isACustomBrandedInstance'
 );
+const internalConversations = useMapGetter(
+  'internalConversations/getInternalConversations'
+);
+
+const internalConversationsUnreadCount = computed(() =>
+  internalConversations.value.reduce(
+    (total, conversation) => total + (conversation.unread_count || 0),
+    0
+  )
+);
 const isRTL = useMapGetter('accounts/isRTL');
 
 const { width: windowWidth } = useWindowSize();
@@ -254,6 +264,7 @@ onMounted(() => {
   store.dispatch('attributes/get');
   store.dispatch('customViews/get', 'conversation');
   store.dispatch('customViews/get', 'contact');
+  store.dispatch('internalConversations/fetchAll');
 });
 
 watch([accountId, hasConversationUnreadCounts], fetchConversationUnreadCounts, {
@@ -414,6 +425,14 @@ const menuItems = computed(() => {
             ? unattendedUnreadCount.value
             : 0,
           to: accountScopedRoute('conversation_unattended'),
+        },
+        {
+          name: 'Internal Chat',
+          label: t('SIDEBAR.INTERNAL_CHAT'),
+          icon: 'i-lucide-messages-square',
+          to: accountScopedRoute('internal_conversations_index'),
+          activeOn: ['internal_conversations_index', 'internal_conversations_show'],
+          badgeCount: internalConversationsUnreadCount.value,
         },
         {
           name: 'Folders',

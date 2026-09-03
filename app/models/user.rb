@@ -19,7 +19,7 @@
 #  message_signature      :text
 #  name                   :string           not null
 #  otp_backup_codes       :text
-#  otp_required_for_login :boolean          default(FALSE)
+#  otp_required_for_login :boolean          default(FALSE), not null
 #  otp_secret             :string
 #  provider               :string           default("email"), not null
 #  pubsub_token           :string
@@ -96,6 +96,9 @@ class User < ApplicationRecord
   has_many :conversation_participants, dependent: :destroy_async
   has_many :participating_conversations, through: :conversation_participants, source: :conversation
 
+  has_many :internal_conversation_participants, dependent: :destroy
+  has_many :internal_conversations, through: :internal_conversation_participants
+  has_many :internal_messages, dependent: :destroy  
   has_many :inbox_members, dependent: :destroy_async
   has_many :inboxes, through: :inbox_members, source: :inbox
   has_many :messages, as: :sender, dependent: :nullify

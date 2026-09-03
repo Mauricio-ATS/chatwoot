@@ -164,6 +164,7 @@ Rails.application.routes.draw do
               get :unread_counts, to: 'conversations/unread_counts#index'
               post :filter
             end
+          
             scope module: :conversations do
               resources :messages, only: [:index, :create, :destroy, :update] do
                 member do
@@ -172,12 +173,15 @@ Rails.application.routes.draw do
                   post :retry
                 end
               end
+
               resources :assignments, only: [:create]
               resources :labels, only: [:create, :index]
               resource :participants, only: [:show, :create, :update, :destroy]
               resource :direct_uploads, only: [:create]
               resource :draft_messages, only: [:show, :update, :destroy]
             end
+
+            
             member do
               post :mute
               post :unmute
@@ -193,6 +197,15 @@ Rails.application.routes.draw do
               get :inbox_assistant
               get :reporting_events if ChatwootApp.enterprise?
             end
+          end
+
+          resources :internal_conversations, only: [:index, :show, :create] do
+            member do
+              post :mark_as_read
+              resource :direct_uploads, only: [:create], controller: 'internal_conversations/direct_uploads'
+            end
+
+            resources :internal_messages, only: [:index, :create]
           end
 
           resources :search, only: [:index] do

@@ -38,6 +38,7 @@ class ActionCableConnector extends BaseActionCableConnector {
     this.filteredUnreadCountsRetryTimer = null;
     this.events = {
       'message.created': this.onMessageCreated,
+      'internal_message.created': this.onInternalMessageCreated,
       'message.updated': this.onMessageUpdated,
       'conversation.created': this.onConversationCreated,
       'conversation.status_changed': this.onStatusChange,
@@ -136,6 +137,13 @@ class ActionCableConnector extends BaseActionCableConnector {
       lastActivityAt,
       conversationId,
     });
+  };
+
+  onInternalMessageCreated = data => {
+    this.app.$store.dispatch(
+      'internalConversations/handleRealtimeMessage',
+      data
+    );
   };
 
   // eslint-disable-next-line class-methods-use-this

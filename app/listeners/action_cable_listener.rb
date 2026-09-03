@@ -46,6 +46,37 @@ class ActionCableListener < BaseListener
     broadcast(account, tokens, MESSAGE_CREATED, message.push_event_data)
   end
 
+  def internal_message_created(event)
+    internal_message = event.data[:internal_message]
+    account = internal_message.account
+    conversation = internal_message.internal_conversation
+    sender = internal_message.user # ou a associação correta do autor
+
+    tokens = conversation.participants.pluck(:pubsub_token)
+
+    broadcast(
+      account,
+      tokens,
+      INTERNAL_MESSAGE_CREATED,
+      {
+        internal_message: {
+          id: internal_message.id,
+          internal_conversation_id: internal_message.internal_conversation_id,
+          content: internal_message.content,
+          message_type: internal_message.message_type,
+          created_at: internal_message.created_at,
+          sender: {
+            id: sender.id,
+            name: sender.name,
+            avatar_url: sender.avatar_url, # ou método equivalente de avatar
+            type: 'agent' # ou 'agent' dependendo da sua regra
+          }
+        }
+      }
+    )
+  end
+
+
   def message_updated(event)
     message, account = extract_message_and_account(event)
     conversation = message.conversation

@@ -40,7 +40,13 @@ services:
       - VITE_DEV_SERVER_HOST=vite
       - NODE_ENV=development
       - RAILS_ENV=development
-      - NODE_OPTIONS=--max-old-space-size=6500
+      # Otimização de RAM: Node limite para o Rails container
+      - NODE_OPTIONS=--max-old-space-size=4096
+      # Otimização de RAM: Ruby Garbage Collector e Workers
+      - WEB_CONCURRENCY=1
+      - RAILS_MAX_THREADS=5
+      - RUBY_GC_HEAP_GROWTH_FACTOR=1.1
+      - RUBY_GC_MALLOC_LIMIT=40000000
     entrypoint: docker/entrypoints/rails.sh
     command: ["bundle", "exec", "rails", "s", "-p", "3000", "-b", "0.0.0.0"]
     networks:
@@ -65,6 +71,9 @@ services:
     environment:
       - NODE_ENV=development
       - RAILS_ENV=development
+      # Otimização de RAM: Ruby Garbage Collector para o Sidekiq
+      - RUBY_GC_HEAP_GROWTH_FACTOR=1.1
+      - RUBY_GC_MALLOC_LIMIT=40000000
     command: ["bundle", "exec", "sidekiq", "-C", "config/sidekiq.yml"]
 
   vite:
@@ -80,11 +89,13 @@ services:
       - cache:/app/tmp/cache
       - bundle:/usr/local/bundle
     ports:
-      - "3036:3036" # Vite dev server
+      - "3036:3036"
     environment:
       - VITE_DEV_SERVER_HOST=0.0.0.0
       - NODE_ENV=development
       - RAILS_ENV=development
+      # Otimização de RAM: Aplica o limite no compilador do frontend (Vite)
+      - NODE_OPTIONS=--max-old-space-size=4096
     entrypoint: docker/entrypoints/vite.sh
     command: bin/vite dev
 
@@ -116,6 +127,39 @@ services:
       - 1025:1025
       - 8025:8025
 
+  evolution:
+    image: evoapicloud/evolution-api:latest
+    container_name: evolution_chatwoot3
+    restart: unless-stopped
+    env_file: []
+    depends_on:
+      - redis
+      - postgres
+      - rails        # Corrigido de chatwoot para rails
+    networks:
+      - default      # Permite falar com rails/redis/postgres internos
+      - evolution-net # Permite falar com serviços externos na rede evolution-net
+    ports:
+      - "8080:8080"
+    volumes:
+      - evolution_instances:/evolution/instances
+    environment:
+      WHATSAPP_IMPORT_HISTORY: "false"
+      CHATWOOT_ENABLED: "true"
+      SERVER_URL: http://evolution:8080
+      DATABASE_PROVIDER: postgresql
+      # Credenciais corrigidas para apontar para o container postgres interno
+      DATABASE_CONNECTION_URI: postgresql://postgres:postgres@1506@postgres:5432/admin_evolution?schema=public
+      DATABASE_URL: postgresql://postgres:postgres@1506@postgres:5432/admin_evolution?schema=public
+      CACHE_REDIS_ENABLED: "true"
+      CACHE_REDIS_URI: redis://redis:6379/6
+      AUTH_ENABLED: "true"
+      AUTH_STRATEGY: apikey
+      AUTHENTICATION_API_KEY: "ats@A2t00s7"
+      LOG_LEVEL: debug
+      CHATWOOT_ACCOUNT_ID: "1"
+      CHATWOOT_SYNC_HISTORY: "false"
+
 volumes:
   postgres:
     external: true
@@ -125,6 +169,7 @@ volumes:
   node_modules:
   cache:
   bundle:
+  evolution_instances:
 
 networks:
   evolution-net:

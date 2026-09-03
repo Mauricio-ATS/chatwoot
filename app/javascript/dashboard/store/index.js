@@ -62,7 +62,7 @@ import copilotMessages from './captain/copilotMessages';
 import captainScenarios from './captain/scenarios';
 import captainTools from './captain/tools';
 import captainCustomTools from './captain/customTools';
-
+import internalConversations from './modules/internalConversations';
 const plugins = [];
 
 export default createStore({
@@ -79,6 +79,7 @@ export default createStore({
     automations,
     bulkActions,
     campaigns,
+    internalConversations,
     cannedResponse,
     categories,
     contactConversations,

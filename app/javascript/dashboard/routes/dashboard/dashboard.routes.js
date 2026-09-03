@@ -14,7 +14,7 @@ import Suspended from './suspended/Index.vue';
 import NoAccounts from './noAccounts/Index.vue';
 import OnboardingAccountDetails from './onboarding/Index.vue';
 import OnboardingInboxSetup from './onboarding/InboxSetup.vue';
-
+import { routes as internalConversationsRoutes } from './internalConversations/internalConversations.routes';
 export default {
   routes: [
     {
@@ -31,6 +31,7 @@ export default {
         ...searchRoutes,
         ...helpcenterRoutes.routes,
         ...campaignsRoutes.routes,
+        ...internalConversationsRoutes,
       ],
     },
     {
