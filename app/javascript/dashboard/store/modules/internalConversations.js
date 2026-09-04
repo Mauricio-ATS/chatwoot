@@ -37,7 +37,7 @@ export const getters = {
 };
 
 export const actions = {
-    handleRealtimeMessage: ({ commit }, data) => {
+  handleRealtimeMessage: ({ commit }, data) => {
     const message = data.internal_message;
 
     if (!message) {
@@ -110,7 +110,8 @@ export const actions = {
   fetchMessages: async ({ commit }, conversationId) => {
     commit(types.SET_INTERNAL_MESSAGES_UI_FLAG, { isFetching: true });
     try {
-      const response = await InternalConversationsAPI.getMessages(conversationId);
+      const response =
+        await InternalConversationsAPI.getMessages(conversationId);
       commit(types.SET_INTERNAL_MESSAGES, {
         conversationId,
         messages: response.data.payload,
@@ -122,12 +123,18 @@ export const actions = {
     }
   },
 
-  sendMessage: async ({ commit }, { conversationId, content }) => {
+  sendMessage: async (
+    { commit },
+    { conversationId, content, attachments = [] }
+  ) => {
     commit(types.SET_INTERNAL_MESSAGES_UI_FLAG, { isSending: true });
     try {
       const response = await InternalConversationsAPI.createMessage(
         conversationId,
-        content
+        {
+          content,
+          attachments,
+        }
       );
       commit(types.ADD_INTERNAL_MESSAGE, {
         conversationId,

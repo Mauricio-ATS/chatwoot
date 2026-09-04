@@ -22,8 +22,11 @@ class InternalConversationsAPI extends ApiClient {
     return axios.get(`${this.url}/${conversationId}/internal_messages`);
   }
 
-  createMessage(conversationId, content) {
-    return axios.post(`${this.url}/${conversationId}/internal_messages`, { content });
+  createMessage(conversationId, { content, attachments = [] }) {
+    return axios.post(`${this.url}/${conversationId}/internal_messages`, {
+      content,
+      attachments,
+    });
   }
 }
 

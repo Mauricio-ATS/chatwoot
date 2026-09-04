@@ -63,6 +63,7 @@ class ActionCableListener < BaseListener
           id: internal_message.id,
           internal_conversation_id: internal_message.internal_conversation_id,
           content: internal_message.content,
+          attachments: internal_message.internal_message_attachments.map(&:push_event_data),
           message_type: internal_message.message_type,
           created_at: internal_message.created_at,
           sender: {

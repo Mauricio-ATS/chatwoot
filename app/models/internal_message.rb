@@ -22,11 +22,11 @@ class InternalMessage < ApplicationRecord
   belongs_to :account
   belongs_to :user
 
- has_many :internal_message_attachments, dependent: :destroy, autosave: true
+  has_many :internal_message_attachments, dependent: :destroy, autosave: true
 
   enum message_type: { text: 0, system: 1 }
 
-  validates :content, presence: true, if: -> { text? }
+  validates :content, presence: true, if: -> { text? && internal_message_attachments.blank? }
 
   after_create_commit :dispatch_created_event
   after_create_commit :touch_conversation_activity
