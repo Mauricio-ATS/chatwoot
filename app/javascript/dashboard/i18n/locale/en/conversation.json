@@ -364,6 +364,7 @@
       "DELETE": "Delete",
       "CREATE_A_CANNED_RESPONSE": "Add to canned responses",
       "TRANSLATE": "Translate",
+      "FORWARD": "Forward",
       "COPY_PERMALINK": "Copy link to the message",
       "LINK_COPIED": "Message URL copied to the clipboard",
       "DELETE_CONFIRMATION": {
@@ -574,5 +575,16 @@
   },
   "GALLERY_VIEW": {
     "ERROR_DOWNLOADING": "Unable to download attachment. Please try again"
+  },
+  "FORWARD_MESSAGE": {
+    "TITLE": "Share message",
+    "DESCRIPTION": "Share the message with your contacts",
+    "SEARCH_LABEL": "Search for a contact",
+    "SEARCH_PLACEHOLDER": "Type the name or phone number",
+    "EMPTY_STATE": "No contacts found.",
+    "CANCEL": "Cancel",
+    "SUBMIT": "Forward",
+    "SUCCESS": "Message forwarded successfully!",
+    "ERROR": "Could not forward the message."
   }
 }

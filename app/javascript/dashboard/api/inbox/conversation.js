@@ -87,6 +87,13 @@ class ConversationApi extends ApiClient {
     return axios.post(`${this.url}/${id}/unread`);
   }
 
+  forwardMessage(conversationId, messageId, contactIds) {
+    return axios.post(
+      `${this.url}/${conversationId}/messages/${messageId}/forward`,
+      { contact_ids: contactIds }
+    );
+  }
+
   toggleTyping({ conversationId, status, isPrivate }) {
     return axios.post(`${this.url}/${conversationId}/toggle_typing_status`, {
       typing_status: status,
