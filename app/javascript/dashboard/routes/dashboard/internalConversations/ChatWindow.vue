@@ -36,12 +36,39 @@ const openFilePicker = () => {
   fileInput.value?.click();
 };
 
+const uploadFiles = files => {
+  files.forEach(file => {
+    const upload = new DirectUpload(
+      file,
+      `/api/v1/accounts/${accountId.value}/internal_conversations/${props.conversation.id}/direct_uploads`,
+      {
+        directUploadWillCreateBlobWithXHR: xhr => {
+          setDirectUploadAuthHeaders(xhr);
+        },
+      }
+    );
+
+    upload.create((error, blob) => {
+      if (error) {
+        console.error('Erro no upload:', error);
+        return;
+      }
+
+      attachedFiles.value.push({
+        file,
+        blobSignedId: blob.signed_id,
+      });
+    });
+  });
+};
+
 const handleFileSelected = event => {
   const files = Array.from(event.target.files || []);
 
   if (!files.length) {
     return;
   }
+    uploadFiles(files);
 
   files.forEach(file => {
     const upload = new DirectUpload(
@@ -68,6 +95,35 @@ const handleFileSelected = event => {
   });
 
   event.target.value = '';
+};
+
+const handlePaste = event => {
+  const items = Array.from(event.clipboardData?.items || []);
+
+  const imageFiles = items
+    .filter(item => item.type.startsWith('image/'))
+    .map(item => item.getAsFile())
+    .filter(Boolean);
+
+  if (!imageFiles.length) {
+    return;
+  }
+
+  event.preventDefault();
+
+  const files = imageFiles.map((file, index) => {
+    const extension = file.type.split('/')[1] || 'png';
+
+    return new File(
+      [file],
+      `screenshot-${Date.now()}-${index}.${extension}`,
+      {
+        type: file.type,
+      }
+    );
+  });
+
+  uploadFiles(files);
 };
 
 const scrollToBottom = async () => {
@@ -322,6 +378,7 @@ watch(
         class="flex-1 px-3 py-2 text-sm rounded-lg border resize-none border-n-weak bg-n-background focus:outline-none focus:ring-1 focus:ring-n-brand"
         :placeholder="$t('INTERNAL_CHAT.MESSAGE_PLACEHOLDER')"
         @keydown="handleKeydown"
+        @paste="handlePaste"
       />
 
       <button
