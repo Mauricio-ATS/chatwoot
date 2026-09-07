@@ -549,17 +549,15 @@ const actions = {
     }
   },
 
-  forwardMessage: async (_, { conversationId, messageId, contactIds }) => {
-    console.log('[Vuex Action] 3. Entrou na action forwardMessage com:', { conversationId, messageId, contactIds });
-    try {
-      const response = await ConversationApi.forwardMessage(conversationId, messageId, contactIds);
-      console.log('[Vuex Action] 4. Resposta da API:', response);
+  forwardMessage: async (_, { conversationId, messageId, contactIds, includeHeader }) => {
+      const response = await ConversationApi.forwardMessage(
+        conversationId,
+        messageId,
+        contactIds,
+        includeHeader
+      );
       return response.data;
-    } catch (error) {
-      console.error('[Vuex Action] Erro na requisição API:', error);
-      throw error;
-    }
-  },
+    },
 
   ...messageReadActions,
   ...messageTranslateActions,

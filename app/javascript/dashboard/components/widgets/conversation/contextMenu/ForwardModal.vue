@@ -11,6 +11,7 @@
       />
 
       <div class="flex-1 flex flex-col min-h-0 px-6 py-4">
+        <!-- Search Field -->
         <div class="mb-4">
           <label class="block mb-1 text-xs font-medium text-slate-700 dark:text-slate-200">
             {{ $t('FORWARD_MESSAGE.SEARCH_LABEL') }}
@@ -24,6 +25,7 @@
           />
         </div>
 
+        <!-- List of Contacts -->
         <div
           ref="contactListContainer"
           class="flex-1 min-h-0 overflow-y-auto border border-slate-100 dark:border-slate-800 rounded-md divide-y divide-slate-100 dark:divide-slate-800"
@@ -82,8 +84,22 @@
             {{ $t('FORWARD_MESSAGE.EMPTY_STATE') }}
           </div>
         </div>
+
+        <!-- Include Header Option -->
+        <div class="mt-4 flex items-center gap-2">
+          <input
+            id="includeHeader"
+            v-model="includeHeader"
+            type="checkbox"
+            class="rounded border-slate-300 text-woot-500 focus:ring-woot-500 cursor-pointer"
+          />
+          <label for="includeHeader" class="text-xs text-slate-700 dark:text-slate-200 cursor-pointer select-none">
+            {{ $t('FORWARD_MESSAGE.INCLUDEHEADER') }}
+          </label>
+        </div>
       </div>
 
+      <!-- Footer -->
       <div class="flex justify-end gap-2 px-6 py-4 border-t border-slate-100 dark:border-slate-800">
         <button
           type="button"
@@ -133,6 +149,7 @@ export default {
       selectedContactIds: [],
       currentPage: 1,
       isSubmitting: false,
+      includeHeader: true,
     };
   },
 
@@ -202,30 +219,25 @@ export default {
     },
 
     async onSubmit() {
-        console.log('[ForwardModal] 1. Tentando enviar:', {
-            conversationId: this.message.conversation_id,
-            messageId: this.message.id,
-            contactIds: this.selectedContactIds,
+      if (!this.selectedContactIds.length || this.isSubmitting) return;
+
+      this.isSubmitting = true;
+
+      try {
+        await this.$store.dispatch('forwardMessage', {
+          conversationId: this.message.conversation_id,
+          messageId: this.message.id,
+          contactIds: this.selectedContactIds,
+          includeHeader: Boolean(this.includeHeader),
         });
 
-        if (!this.selectedContactIds.length || this.isSubmitting) return;
-        this.isSubmitting = true;
-
-        try {
-            const res = await this.$store.dispatch('forwardMessage', {
-            conversationId: this.message.conversation_id,
-            messageId: this.message.id,
-            contactIds: this.selectedContactIds,
-            });
-            console.log('[ForwardModal] 2. Sucesso no Dispatch:', res);
-            useAlert(this.$t('FORWARD_MESSAGE.SUCCESS'));
-            this.onClose();
-        } catch (error) {
-            console.error('[ForwardModal] Erro ao disparar action:', error);
-            useAlert(this.$t('FORWARD_MESSAGE.ERROR'));
-        } finally {
-            this.isSubmitting = false;
-        }
+        useAlert(this.$t('FORWARD_MESSAGE.SUCCESS'));
+        this.onClose();
+      } catch (error) {
+        useAlert(this.$t('FORWARD_MESSAGE.ERROR'));
+      } finally {
+        this.isSubmitting = false;
+      }
     }
   },
 };

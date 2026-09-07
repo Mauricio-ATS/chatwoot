@@ -538,6 +538,7 @@
     "CANCEL": "Cancelar",
     "SUBMIT": "Encaminhar",
     "SUCCESS": "Mensagem encaminhada com sucesso!",
-    "ERROR": "Não foi possível encaminhar a mensagem."
+    "ERROR": "Não foi possível encaminhar a mensagem.",
+    "INCLUDEHEADER": "Incluir cabeçalho 'Mensagem encaminhada de...'"
   }
 }

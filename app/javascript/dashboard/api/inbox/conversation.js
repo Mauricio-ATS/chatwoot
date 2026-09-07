@@ -142,10 +142,13 @@ class ConversationApi extends ApiClient {
     return axios.delete(`${this.url}/${conversationId}`);
   }
 
-  forwardMessage(conversationId, messageId, contactIds) {
+  forwardMessage(conversationId, messageId, contactIds, includeHeader = true) {
     return axios.post(
       `${this.url}/${conversationId}/messages/${messageId}/forward`,
-      { contact_ids: contactIds }
+      { 
+        contact_ids: contactIds,
+        include_header: includeHeader
+      }
     );
   }
 }
