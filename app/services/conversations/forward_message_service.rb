@@ -1,10 +1,11 @@
 module Conversations
   class ForwardMessageService
-    def initialize(account:, original_message:, target_contact:, user:)
+    def initialize(account:, original_message:, target_contact:, user:, include_header: true)
       @account = account
       @original_message = original_message
       @target_contact = target_contact
       @user = user
+      @include_header = include_header
     end
 
     def perform
@@ -37,27 +38,27 @@ module Conversations
     end
 
     def create_forwarded_message(conversation)
-      params = {
-        content: @original_message.content,
+      forwarded_content = if @include_header
+        sender_name = @original_message.sender&.name || 'Contato'
+        "*Mensagem encaminhada de: #{sender_name}*\n\n#{@original_message.content}"
+      else
+        @original_message.content
+      end
+
+      new_message = conversation.messages.build(
+        account_id: @account.id,
+        inbox_id: conversation.inbox_id,
         message_type: :outgoing,
+        content: forwarded_content,
         private: false,
+        sender: @user,
         content_attributes: {
           is_forwarded: true,
           original_message_id: @original_message.id
         }
-      }
-
-      # Build the message using the builder
-      builder = Messages::MessageBuilder.new(@user, conversation, params)
-      new_message = builder.perform
-
-      # Ensures the logged-in agent is assigned as the sender
-      if new_message.present? && @user.present?
-        new_message.update!(sender: @user)
-      end
-
-      duplicate_attachments(new_message) if new_message.present? && @original_message.attachments.present?
-
+      )
+      duplicate_attachments(new_message) if @original_message.attachments.present?
+      new_message.save!
       new_message
     end
 
@@ -69,8 +70,8 @@ module Conversations
           account_id: @account.id,
           file_type: attachment.file_type
         )
+
         new_attachment.file.attach(attachment.file.blob)
-        new_attachment.save!
       end
     end
   end

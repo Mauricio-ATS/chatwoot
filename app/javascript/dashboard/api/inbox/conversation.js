@@ -87,10 +87,13 @@ class ConversationApi extends ApiClient {
     return axios.post(`${this.url}/${id}/unread`);
   }
 
-  forwardMessage(conversationId, messageId, contactIds) {
+  forwardMessage(conversationId, messageId, contactIds, includeHeader = true) {
     return axios.post(
       `${this.url}/${conversationId}/messages/${messageId}/forward`,
-      { contact_ids: contactIds }
+      { 
+        contact_ids: contactIds,
+        include_header: includeHeader
+      }
     );
   }
 

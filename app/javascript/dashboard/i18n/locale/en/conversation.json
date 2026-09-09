@@ -585,6 +585,7 @@
     "CANCEL": "Cancel",
     "SUBMIT": "Forward",
     "SUCCESS": "Message forwarded successfully!",
-    "ERROR": "Could not forward the message."
+    "ERROR": "Could not forward the message.",
+    "INCLUDEHEADER": "Include Header 'Message forwarded from...'"
   }
 }

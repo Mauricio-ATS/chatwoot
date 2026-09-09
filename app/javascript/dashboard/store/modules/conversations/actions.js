@@ -634,13 +634,14 @@ const actions = {
     }
   },
 
-  forwardMessage: async (_, { conversationId, messageId, contactIds }) => {
-    try {
-      const response = await ConversationApi.forwardMessage(conversationId, messageId, contactIds);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+  forwardMessage: async (_, { conversationId, messageId, contactIds, includeHeader }) => {
+    const response = await ConversationApi.forwardMessage(
+      conversationId,
+      messageId,
+      contactIds,
+      includeHeader
+    );
+    return response.data;
   },
 
   ...messageReadActions,
