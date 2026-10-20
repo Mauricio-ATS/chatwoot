@@ -77,9 +77,10 @@ module Conversations
         )
 
         blob = attachment.file.blob
+        clean_filename = ActiveSupport::Inflector.transliterate(blob.filename.to_s).gsub(/[^0-9A-Za-z.\-]/, '_')
         new_attachment.file.attach(
           io: StringIO.new(blob.download),
-          filename: blob.filename.to_s,
+          filename: clean_filename,
           content_type: blob.content_type
         )
         new_attachment.save!
