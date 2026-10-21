@@ -1,0 +1,1 @@
+json.partial! 'internal_conversation', internal_conversation: @conversation

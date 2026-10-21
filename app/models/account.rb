@@ -2,21 +2,22 @@
 #
 # Table name: accounts
 #
-#  id                    :integer          not null, primary key
-#  auto_resolve_duration :integer
-#  custom_attributes     :jsonb
-#  domain                :string(100)
-#  feature_flags         :bigint           default(0), not null
-#  feature_flags_ext_1   :bigint           default(0), not null
-#  internal_attributes   :jsonb            not null
-#  limits                :jsonb
-#  locale                :integer          default("en")
-#  name                  :string           not null
-#  settings              :jsonb
-#  status                :integer          default("active")
-#  support_email         :string(100)
-#  created_at            :datetime         not null
-#  updated_at            :datetime         not null
+#  id                                         :integer          not null, primary key
+#  agents_can_only_see_assigned_conversations :boolean          default(FALSE), not null
+#  auto_resolve_duration                      :integer
+#  custom_attributes                          :jsonb
+#  domain                                     :string(100)
+#  feature_flags                              :bigint           default(0), not null
+#  feature_flags_ext_1                        :bigint           default(0), not null
+#  internal_attributes                        :jsonb            not null
+#  limits                                     :jsonb
+#  locale                                     :integer          default("en")
+#  name                                       :string           not null
+#  settings                                   :jsonb
+#  status                                     :integer          default("active")
+#  support_email                              :string(100)
+#  created_at                                 :datetime         not null
+#  updated_at                                 :datetime         not null
 #
 # Indexes
 #
@@ -73,6 +74,9 @@ class Account < ApplicationRecord
   has_many :automation_rules, dependent: :destroy_async
   has_many :automation_rule_pending_executions, dependent: :delete_all
   has_many :macros, dependent: :destroy_async
+  has_many :internal_conversations, dependent: :destroy
+  has_many :internal_conversation_participants, dependent: :destroy
+  has_many :internal_messages, dependent: :destroy
   has_many :campaigns, dependent: :destroy_async
   has_many :canned_responses, dependent: :destroy_async
   has_many :categories, dependent: :destroy_async, class_name: '::Category'

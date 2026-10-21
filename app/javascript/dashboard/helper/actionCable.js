@@ -41,6 +41,7 @@ class ActionCableConnector extends BaseActionCableConnector {
     this.events = {
       'monitor.updated': this.onMonitorUpdated,
       'message.created': this.onMessageCreated,
+      'internal_message.created': this.onInternalMessageCreated,
       'message.updated': this.onMessageUpdated,
       'conversation.created': this.onConversationCreated,
       'conversation.bot_handoff': this.onConversationBotHandoff,
@@ -201,6 +202,13 @@ class ActionCableConnector extends BaseActionCableConnector {
       lastActivityAt,
       conversationId,
     });
+  };
+
+  onInternalMessageCreated = data => {
+    this.app.$store.dispatch(
+      'internalConversations/handleRealtimeMessage',
+      data
+    );
   };
 
   // eslint-disable-next-line class-methods-use-this

@@ -136,10 +136,14 @@ class MessageApi extends ApiClient {
     );
   }
 
-  autoTranslate(conversationId, messageIds) {
-    return axios.post(`${this.url}/${conversationId}/messages/auto_translate`, {
-      message_ids: messageIds,
-    });
+  forwardMessage(conversationId, messageId, contactIds, includeHeader = true) {
+    return axios.post(
+      `${this.url}/${conversationId}/messages/${messageId}/forward`,
+      { 
+        contact_ids: contactIds,
+        include_header: includeHeader
+      }
+    );
   }
 }
 

@@ -157,6 +157,16 @@ class ConversationApi extends ApiClient {
   delete(conversationId) {
     return axios.delete(`${this.url}/${conversationId}`);
   }
+
+  forwardMessage(conversationId, messageId, contactIds, includeHeader = true) {
+    return axios.post(
+      `${this.url}/${conversationId}/messages/${messageId}/forward`,
+      { 
+        contact_ids: contactIds,
+        include_header: includeHeader
+      }
+    );
+  }
 }
 
 export default new ConversationApi();

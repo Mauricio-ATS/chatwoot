@@ -549,6 +549,19 @@ const actions = {
   },
 
   updateConversation({ commit, dispatch, rootGetters }, conversation) {
+    const currentUser = rootGetters['getCurrentUser'];
+    const isAgent = currentUser?.role === 'agent';
+
+    if (isAgent) {
+      const assigneeId = conversation.meta?.assignee?.id || conversation.assignee_id;
+      const isAssignedToMe = assigneeId === currentUser?.id;
+      const isUnassigned = !assigneeId;
+      if (!isAssignedToMe && !isUnassigned) {
+        commit(types.DELETE_CONVERSATION, conversation.id);
+        return;
+      }
+    }
+
     const sender = conversation.meta?.sender;
 
     commit(types.UPDATE_CONVERSATION, conversation);
@@ -708,6 +721,16 @@ const actions = {
       // Handle error
     }
   },
+
+  forwardMessage: async (_, { conversationId, messageId, contactIds, includeHeader }) => {
+      const response = await ConversationApi.forwardMessage(
+        conversationId,
+        messageId,
+        contactIds,
+        includeHeader
+      );
+      return response.data;
+    },
 
   ...messageReadActions,
   ...messageTranslateActions,

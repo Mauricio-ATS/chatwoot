@@ -40,8 +40,14 @@ services:
       - VITE_DEV_SERVER_HOST=vite
       - NODE_ENV=development
       - RAILS_ENV=development
+      - NODE_OPTIONS=--max-old-space-size=6500
     entrypoint: docker/entrypoints/rails.sh
     command: ["bundle", "exec", "rails", "s", "-p", "3000", "-b", "0.0.0.0"]
+    networks:
+      default:
+      evolution-net:
+        aliases:
+          - chatwoot.local
 
   sidekiq:
     <<: *base
@@ -86,13 +92,13 @@ services:
     image: pgvector/pgvector:pg16
     restart: always
     ports:
-      - '5432:5432'
+      - '5433:5432'
     volumes:
-      - postgres:/data/postgres
+      - postgres:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=chatwoot
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=
+      - POSTGRES_PASSWORD=postgres@1506
 
   redis:
     image: redis:alpine
@@ -112,8 +118,15 @@ services:
 
 volumes:
   postgres:
+    external: true
+    name: chatwoot_postgres
   redis:
   packs:
   node_modules:
   cache:
   bundle:
+
+networks:
+  evolution-net:
+    external: true
+    name: evolution-net
