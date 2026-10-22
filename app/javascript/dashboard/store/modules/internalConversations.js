@@ -37,17 +37,31 @@ export const getters = {
 };
 
 export const actions = {
-  handleRealtimeMessage: ({ commit }, data) => {
+  handleRealtimeMessage: (
+    { commit, dispatch, rootGetters },
+    data
+  ) => {
     const message = data.internal_message;
 
     if (!message) {
       return;
     }
 
+    const conversationId = Number(message.internal_conversation_id);
+    const currentUserId = Number(rootGetters.getCurrentUserID);
+    const senderId = Number(message.sender?.id);
+
+    // Adiciona a mensagem ao histórico, evitando duplicatas.
     commit(types.ADD_INTERNAL_MESSAGE, {
-      conversationId: message.internal_conversation_id,
+      conversationId,
       message,
     });
+    // Mensagens próprias não aumentam o contador de não lidas.
+    if (senderId === currentUserId) {
+      return;
+    }
+    // Atualiza a lista de conversas para refletir a atividade recente.
+    dispatch('fetchAll');
   },
   fetchAll: async ({ commit }) => {
     commit(types.SET_INTERNAL_CONVERSATIONS_UI_FLAG, { isFetching: true });

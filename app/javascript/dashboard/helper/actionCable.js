@@ -209,6 +209,12 @@ class ActionCableConnector extends BaseActionCableConnector {
       'internalConversations/handleRealtimeMessage',
       data
     );
+
+    const message = data.internal_message;
+
+    if (message) {
+      DashboardAudioNotificationHelper.onInternalMessage(message);
+    }
   };
 
   // eslint-disable-next-line class-methods-use-this

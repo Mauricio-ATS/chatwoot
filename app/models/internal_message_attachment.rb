@@ -1,3 +1,25 @@
+# == Schema Information
+#
+# Table name: internal_message_attachments
+#
+#  id                  :bigint           not null, primary key
+#  extension           :string
+#  file_type           :integer          default("file"), not null
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  account_id          :bigint           not null
+#  internal_message_id :bigint           not null
+#
+# Indexes
+#
+#  index_internal_message_attachments_on_account_id           (account_id)
+#  index_internal_message_attachments_on_internal_message_id  (internal_message_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (account_id => accounts.id)
+#  fk_rails_...  (internal_message_id => internal_messages.id)
+#
 class InternalMessageAttachment < ApplicationRecord
   include Rails.application.routes.url_helpers
   include FileTypeHelper

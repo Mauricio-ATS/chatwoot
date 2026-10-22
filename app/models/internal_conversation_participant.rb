@@ -26,6 +26,7 @@ class InternalConversationParticipant < ApplicationRecord
 
   def unread_count
     scope = internal_conversation.internal_messages
+                                  .where.not(user_id: user_id)
     scope = scope.where('created_at > ?', last_read_at) if last_read_at.present?
     scope.count
   end

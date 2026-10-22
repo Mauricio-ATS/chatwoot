@@ -104,6 +104,28 @@ export class DashboardAudioNotificationHelper {
     return true;
   };
 
+  onInternalMessage = message => {
+    if (!message) return;
+
+    // Não notifica mensagens enviadas pelo próprio usuário.
+    if (
+      Number(message.sender?.id) === Number(this.currentUser?.id)
+    ) {
+      return;
+    }
+
+    const { audioAlertType } = this.notificationConfig;
+
+    // Respeita a configuração de notificações sonoras.
+    if (!audioAlertType || audioAlertType.includes('none')) {
+      return;
+    }
+
+    // Para mensagens internas, notifica mesmo com o Chatwoot visível.
+    this.playAudioAlert();
+    showBadgeOnFavicon();
+  };
+
   executeRecurringNotification = () => {
     if (this.store.hasUnreadConversation() && this.shouldPlayAlert()) {
       this.playAudioAlert();
