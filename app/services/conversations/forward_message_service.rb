@@ -40,7 +40,7 @@ module Conversations
     def create_forwarded_message(conversation)
       forwarded_content = if @include_header
         sender_name = @original_message.sender&.name || 'Contato'
-        "*Mensagem encaminhada de: #{sender_name}*\n\n#{@original_message.content}"
+        "↪ _Encaminhada de #{sender_name}_\n\n#{@original_message.content}"
       else
         @original_message.content
       end
@@ -55,14 +55,20 @@ module Conversations
         }
       }
 
-      builder = Messages::MessageBuilder.new(@user, conversation, params)
-      new_message = builder.perform
+      new_message = nil
+      
+      Message.transaction do
+        builder = Messages::MessageBuilder.new(@user, conversation, params)
+        new_message = builder.perform
 
-      if new_message.present? && @user.present?
-        new_message.update!(sender: @user)
+        if new_message.present? && @user.present?
+          new_message.update!(sender: @user)
+        end
+
+        if new_message.present? && @original_message.attachments.present?
+          duplicate_attachments(new_message)
+        end
       end
-
-      duplicate_attachments(new_message) if new_message.present? && @original_message.attachments.present?
 
       new_message
     end
